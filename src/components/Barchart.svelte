@@ -4,7 +4,6 @@
   // 1. Basic Setup: Get the data
   let { data } = $props();
 
-
   // 2. Dimensions, Margins & Scales
 
   // Data for plotting x-y axis
