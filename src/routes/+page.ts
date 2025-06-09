@@ -7,15 +7,19 @@ export async function load({ fetch, params }) {
         const res = await fetch(dataFile, {
             headers: { "content-type": "text/csv;charset=UTF-8" },
         });
+        if (!res.ok) {
+            console.log(res.status);
+            throw new Error('Something is broken!');
+        }
         const textData = await res.text();
         const csvData = Papa.parse(textData, {header: true});
         const iomData: mmData = csvData.data
             .filter((e) => e.Coordinates !== "")
             .filter((e) => e["Incident Year"] !== undefined)
             .sort((a, b) => new Date(a["Incident Date"]) - new Date(b["Incident Date"]));
-        //console.log(iomData.length);//18761
+        // console.log(iomData.length);//18761
         const dataForBarchart = transformForBarchart(iomData);
-        console.log(dataForBarchart);
+        // console.log(dataForBarchart);
         return {
 	    iom: {
 	        metadata: iomMetadata,
