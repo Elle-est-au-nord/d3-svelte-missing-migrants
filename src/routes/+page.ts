@@ -9,7 +9,7 @@ export async function load({ fetch, params }) {
         });
         if (!res.ok) {
             console.log(res.status);
-            throw new Error('Something is broken!');
+            //throw new Error('Something is broken!');
         }
         const textData = await res.text();
         const csvData = Papa.parse(textData, {header: true});
