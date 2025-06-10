@@ -76,7 +76,7 @@ interface mmRecord {
 
 type mmData = mmRecord[];
 
-const dataFile = '/data/Missing_Migrants_Global_Figures_allData.csv';
+const dataFile = 'src/data/Missing_Migrants_Global_Figures_allData.csv';
 
 function transformForBarchart(data: mmData) {
     const byYearIter = group(data, d => d["Incident Year"]);
