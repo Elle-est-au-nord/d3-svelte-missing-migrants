@@ -2,9 +2,10 @@
   /** @type {import('./$types').PageProps} */
   import Barchart from '../components/Barchart.svelte';
   import { format } from 'd3-format';
+  import Papa from 'papaparse';
+
 
   let { data } = $props();
-
   let points = $state(data.iom.content);
   let totalVictims = points.reduce(
     (acc, curr) => acc + curr.victims, 0,

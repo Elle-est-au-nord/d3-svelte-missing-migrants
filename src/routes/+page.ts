@@ -1,8 +1,10 @@
 /** @type {import('./$types').PageLoad} */
 import Papa from 'papaparse';
 import { group } from 'd3-array';
+import dataFile from './Missing_Migrants_Global_Figures_allData.csv';
 
-export async function load({ fetch, params }) {
+
+export const load:Load = async ({fetch, params}) => {
     try {
         const res = await fetch(dataFile, {
             headers: { "content-type": "text/csv;charset=UTF-8" },
@@ -75,8 +77,6 @@ interface mmRecord {
 };
 
 type mmData = mmRecord[];
-
-const dataFile = '../data/Missing_Migrants_Global_Figures_allData.csv';
 
 function transformForBarchart(data: mmData) {
     const byYearIter = group(data, d => d["Incident Year"]);
