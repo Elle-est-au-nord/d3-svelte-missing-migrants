@@ -1,12 +1,12 @@
 /** @type {import('./$types').PageLoad} */
 import Papa from 'papaparse';
 import { group } from 'd3-array';
-import dataFile from './Missing_Migrants_Global_Figures_allData.csv';
+//import dataFile from './iomData.csv';
 
 
 export const load:Load = async ({fetch, params}) => {
     try {
-        const res = await fetch(dataFile, {
+        const res = await fetch("/iomData.csv", {
             headers: { "content-type": "text/csv;charset=UTF-8" },
         });
         if (!res.ok) {
