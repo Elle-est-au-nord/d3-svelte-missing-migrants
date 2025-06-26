@@ -1,12 +1,12 @@
 /** @type {import('./$types').PageLoad} */
 import Papa from 'papaparse';
 import { group } from 'd3-array';
-//import dataFile from './iomData.csv';
+//import dataFile from './iomdata.csv';
 
 
 export const load:Load = async ({fetch, params}) => {
     try {
-        const res = await fetch("/iomData.csv", {
+        const res = await fetch('./iomData.csv', {
             headers: { "content-type": "text/csv;charset=UTF-8" },
         });
         if (!res.ok) {
