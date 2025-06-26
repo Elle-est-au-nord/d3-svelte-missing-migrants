@@ -6,7 +6,7 @@ import { group } from 'd3-array';
 
 export const load:Load = async ({fetch, params}) => {
     try {
-        const res = await fetch('./iomData.csv', {
+        const res = await fetch('./iomdata.csv', {
             headers: { "content-type": "text/csv;charset=UTF-8" },
         });
         if (!res.ok) {
