@@ -1,27 +1,21 @@
 /** @type {import('./$types').PageLoad} */
 import Papa from 'papaparse';
 import { group } from 'd3-array';
-//import dataFile from './iomdata.csv';
+import { csv } from 'd3-fetch';
 
+const csvPath = "https://raw.githubusercontent.com/Elle-est-au-nord/explore-datasets/refs/heads/main/missing_migrants/data/Missing_Migrants_Global_Figures_allData.csv"
 
 export const load:Load = async ({fetch, params}) => {
+    //console.log("*****-1-****");
     try {
-        const res = await fetch('./iomdata.csv', {
-            headers: { "content-type": "text/csv;charset=UTF-8" },
-        });
-        if (!res.ok) {
-            console.log(res.status);
-            //throw new Error('Something is broken!');
-        }
-        const textData = await res.text();
-        const csvData = Papa.parse(textData, {header: true});
-        const iomData: mmData = csvData.data
-            .filter((e) => e.Coordinates !== "")
-            .filter((e) => e["Incident Year"] !== undefined)
-            .sort((a, b) => new Date(a["Incident Date"]) - new Date(b["Incident Date"]));
-        // console.log(iomData.length);//18761
+        const iomData = await csv(csvPath)
+            .then((d) => d.filter((e) => e.Coordinates !== "")
+                  .filter((e) => e["Incident Year"] !== undefined)
+                  .sort((a, b) => new Date(a["Incident Date"]) - new Date(b["Incident Date"]))
+                 );
+        //console.log(iomData.length);//18761
         const dataForBarchart = transformForBarchart(iomData);
-        // console.log(dataForBarchart);
+        //console.log(dataForBarchart);
         return {
 	    iom: {
 	        metadata: iomMetadata,

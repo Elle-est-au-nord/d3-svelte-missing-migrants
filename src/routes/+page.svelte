@@ -2,7 +2,6 @@
   /** @type {import('./$types').PageProps} */
   import Barchart from '../components/Barchart.svelte';
   import { format } from 'd3-format';
-  import Papa from 'papaparse';
 
 
   let { data } = $props();
@@ -21,7 +20,7 @@
     </h1>
   </div>
   <div class="flex flex-col md:flex-row p-6 pb-0 bg-slate-400/40">
-    <h2 class="text-2xl font-bold text-slate-800/90">According to IOM's records, {formattedTotal} people have died or gone missing on their migration routes</h2>
+    <h2 class="text-2xl font-bold text-slate-800/90">According to IOM's records, <span class="text-rose-900/90">{formattedTotal}</span> people have died or gone missing on their migration routes</h2>
   </div>
     <div class="flex gap-6 p-6 md:flex-row bg-slate-400/40">
       <Barchart data={points} />
