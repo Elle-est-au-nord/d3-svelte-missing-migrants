@@ -8,12 +8,28 @@ const csvPath = "https://raw.githubusercontent.com/Elle-est-au-nord/explore-data
 export const load:Load = async ({fetch, params}) => {
     //console.log("*****-1-****");
     try {
-        const iomData = await csv(csvPath)
-            .then((d) => d.filter((e) => e.Coordinates !== "")
-                  .filter((e) => e["Incident Year"] !== undefined)
-                  .sort((a, b) => new Date(a["Incident Date"]) - new Date(b["Incident Date"]))
+        const iomData = await csv(csvPath,
+                                  (row) => ({
+                                      incidentType: row["Incident Type"],
+                                      regionOfIncident: row["Region of Incident"],
+                                      countryOfIncident: row["Country of Incident"],
+                                      locationOfIncident: row["Location of Incident"],
+                                      migrationRoute: row["Migration Route"],
+                                      coordinates: row["Coordinates"].split(","),
+                                      incidentDate: row["Incident Date"],
+                                      incidentYear: row["Incident Year"],
+                                      numberOfDeath: Number(row["Number of Dead"]),
+                                      totalDeadOrMissing: Number(row["Total Number of Dead and Missing"]),
+                                      numberOfSurvivors: Number(row["Number of Survivors"]),
+                                      url: row["URL"],
+                                      sourceQuality: row["Source Quality"]
+                                  }))
+            .then((d) => d.filter((e) => e.coordinates !== "")
+                  .filter((e) => e.incidentYear !== undefined)
+                  .sort((a, b) => new Date(a.incidentDate) - new Date(b.incidentDate))
                  );
         //console.log(iomData.length);//18761
+        //console.log(iomData[0]);
         const dataForBarchart = transformForBarchart(iomData);
         //console.log(dataForBarchart);
         return {
@@ -37,7 +53,8 @@ interface Metadata {
 
 interface VictimsYearType {
     year: number; 
-    victims: number;
+    missingOrDeceased: number;
+    deceased: number;
 }
 
 type VictimsPerYearType = VictimsYearType[];
@@ -73,11 +90,12 @@ interface mmRecord {
 type mmData = mmRecord[];
 
 function transformForBarchart(data: mmData) {
-    const byYearIter = group(data, d => d["Incident Year"]);
+    const byYearIter = group(data, d => d.incidentYear);
     const byYearArr: VictimsPerYearType = Array.from(byYearIter,
                        m => new Object({
                            year: parseInt(m[0]),
-                           victims: m[1].reduce( (acc, curr) => acc + parseInt(curr["Total Number of Dead and Missing"]), 0,)
+                           missingOrDeceased: m[1].reduce((acc, curr) => acc + parseInt(curr.totalDeadOrMissing), 0,),
+                           deceased: m[1].reduce((acc, curr) => acc + parseInt(curr.numberOfDeath || 0), 0,)
                        }));
     return byYearArr;
 }

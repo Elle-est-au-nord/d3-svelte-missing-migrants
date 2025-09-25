@@ -1,38 +1,114 @@
 <script>
   /** @type {import('./$types').PageProps} */
-  import Barchart from '../components/Barchart.svelte';
-  import { format } from 'd3-format';
-
-
   let { data } = $props();
-  let points = $state(data.iom.content);
-  let totalVictims = points.reduce(
+  import Barchart from '../components/Barchart.svelte';
+  import Title from '../components/Title.svelte';
+  import { format } from 'd3-format';
+  import { setContext } from 'svelte';
+
+
+  let selected = $state("missingOrDeceased");
+  setContext('selected', () => selected);
+
+  let iomData = data.iom.content;
+  let points = $derived(iomData.map(d => new Object({
+    year: d.year,
+    victims: d[selected]
+  })));
+
+  let totalVictims = $derived(points.reduce(
     (acc, curr) => acc + curr.victims, 0,
-  );
-  let formattedTotal = format(",")(totalVictims)
-  let { updated, source, link} = $state(data.iom.metadata)
+  ));
+  let formattedTotal = $derived(format(",")(totalVictims));
+  let { updated, source, link} = $state(data.iom.metadata);
+
+  const options = ["missingOrDeceased", "deceased"];
 
 </script>
 
 <div class="@container">
-  <div class="flex flex-col gap-2 p-8">
-    <h1 class="text-3xl font-semibold underline text-slate-700/80">
-      Visualizing Missing Migrants
-    </h1>
-    <h4 class="text-slate-700/80">Project by <a class="text-sky-700/90 hover:text-green-700/80" href="https://elle-est-au-nord.com/" target="_blank">Eleonore M.</a> © 2025</h4>
-    <p class="text-xs text-slate-700/80">Data source: <span class="text-sky-700/90"><a href="{link}" target="_blank">{source}</a></span>, data updated in {updated}</p>
+  <Title bind:total={formattedTotal}
+         updated={updated} source={source} link={link}
+    />
+  <div class="selector bg-slate-400/40 flex p-6">
+    {#each options as option}
+      <input style="margin-right:7px;"
+             type="button" id="{option}"
+             class="text-xs p-1 rounded-sm {option}"
+             onclick="{() => (selected = option) }"
+             disabled="{selected === option}"
+             value="{option === 'deceased' ? 'People deceased' 
+              : 'People missing or deceased'}"
+      />
+    {/each}
   </div>
-  <div class="flex flex-col md:flex-row p-6 pb-0 bg-slate-400/40">
-    <h2 class="text-2xl font-bold text-slate-800/90">According to IOM's records, <span class="text-rose-900/90">{formattedTotal}</span> people have died or gone missing on their migration routes</h2>
+  <div class="flex gap-6 p-6 md:flex-row bg-slate-400/40">
+      <Barchart bind:data={points} />
   </div>
-    <div class="flex gap-6 p-6 md:flex-row bg-slate-400/40">
-      <Barchart data={points} />
-    </div>
 </div>
 
-<style lang="postcss">
+<style>
   @reference "tailwindcss";
   :global(html) {
     background-color: theme(--color-gray-100);
   }
+
+  .selector {
+        width: 100%;
+        height: 80px;
+        font-size: 20px;
+    }
+
+    input.missingOrDeceased {
+      background-color: var(--color-red-800);
+      border: 2px solid var(--color-red-900);
+      opacity: 0.8;
+    }
+
+    input.deceased {
+      background-color: var(--color-stone-700);
+      border: 2px solid var(--color-stone-800);
+      opacity: 0.8;
+    }
+
+    input.missingOrDeceased:hover {
+      background-color: var(--color-red-800);
+      opacity: 1;
+      color: white;
+      cursor: pointer;
+    }
+
+    input.deceased:hover {
+      background-color: var(--color-stone-700);
+      opacity: 1;
+      color: white;
+      cursor: pointer;
+    }
+
+    input.missingOrDeceased:disabled {
+      background-color: var(--color-red-900);
+      opacity: 0.4;
+      color: var(--color-stone-600);
+    }
+
+    input.missingOrDeceased:disabled:hover {
+      background-color: var(--color-red-900);
+      opacity: 0.5;
+      color: var(--color-stone-600);
+      cursor: default;
+    }
+
+    input.deceased:disabled {
+      background-color: var(--color-stone-800);
+      opacity: 0.4;
+      color: var(--color-stone-600);
+    }
+
+    input.deceased:disabled:hover {
+      background-color: var(--color-stone-800);
+      opacity: 0.5;
+      color: var(--color-stone-600);
+      cursor: default;
+    }
+ 
 </style>

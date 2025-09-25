@@ -1,9 +1,13 @@
 <script>
   import { scaleLinear } from 'd3-scale';
   import { format } from 'd3-format';
-  // 1. Basic Setup: Get the data
-  let { data } = $props();
+  import { getContext } from 'svelte';
 
+  // 1. Basic Setup: Get the data
+
+  let { data = $bindable() } = $props();
+  const selected = getContext('selected');
+  
   // 2. Dimensions, Margins & Scales
 
   // Data for plotting x-y axis
@@ -20,11 +24,13 @@
       .range([padding.left, width - padding.right])
   );
   
-  let values = data.map(d => d.victims);
+  let values = $state(data.map(d => d.victims));
 
-  let yScale = scaleLinear()
-    .domain([0, Math.max(...values)])
-    .range([height - padding.bottom, padding.top]);
+  let yScale = $derived(
+    scaleLinear()
+      .domain([0, Math.max(...values)])
+      .range([height - padding.bottom, padding.top])
+  );
 
   let innerWidth = $derived(width - (padding.left + padding.right));
   let barWidth = $derived(innerWidth / data.length);
@@ -67,7 +73,7 @@
     </g>
 
     <!-- 4. Design the bars -->
-    <g class="bars">
+    <g class="bars {selected()}">
       {#each data as d, i}
         <rect
           x={xScale(i) + 2}
@@ -88,11 +94,18 @@
     color: --color-slate-800;
   }
 
-  .bars rect {
-    fill: #8B2323;
+  .bars.missingOrDeceased rect {
+    fill: var(--color-red-900);
     stroke: none;
     opacity: .8;
   }
+
+  .bars.deceased rect {
+    fill: var(--color-stone-800);
+    stroke: none;
+    opacity: .8;
+  }
+
 
   .tick {
     font-family: Poppins, sans-serif;
