@@ -12,16 +12,20 @@
 
   // Data for plotting x-y axis
   const yTicks = [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000];
-  const padding = { top: 30, right: 15, bottom: 20, left: 35 };
+  const padding = { top: 10, right: 15, bottom: 10, left: 35 };
   const f = format(",d");
 
-  let width = $state(500);
-  let height = $state(300);
+  let width = $state();
+  let height = 350;
+
+  let innerWidth = $derived(width - padding.left - padding.right);
+  // let innerHeight = $derived(height - padding.top - padding.bottom);
+  let barWidth = $derived(innerWidth / data.length);
 
   let xScale = $derived(
     scaleLinear()
       .domain([0, data.length])
-      .range([padding.left, width - padding.right])
+      .range([padding.left, innerWidth + padding.left])
   );
   
   let values = $state(data.map(d => d.victims));
@@ -29,12 +33,10 @@
   let yScale = $derived(
     scaleLinear()
       .domain([0, Math.max(...values)])
-      .range([height - padding.bottom, padding.top])
+      .range([height - padding.bottom - padding.top, padding.top])
   );
 
-  let innerWidth = $derived(width - (padding.left + padding.right));
-  let barWidth = $derived(innerWidth / data.length);
-
+  
   // 3. Functions needed to create the Data elements or Helper functions, e.g d3.line d3.arc when needed
 
   // Shorten the date axis values for mobile
@@ -46,10 +48,8 @@
   // We will do this in the html markup
 </script>
 
-<div class="barchart" 
-     bind:clientWidth={width}
-     bind:clientHeight={height}>
-  <svg width={width} height={height}>
+<div class="barchart flex-1" bind:clientWidth={width}>
+  <svg {width} {height}>
     
     <!-- Design y axis -->
     <g class="axis y-axis">
@@ -65,9 +65,10 @@
     <!-- Design x axis -->
     <g class="axis x-axis">
       {#each data as d, i}
-        <g class="tick" transform="translate({xScale(i)}, {height})">
-          <text x={barWidth / 2} y="-4">
-            {width > 380 ? d.year : formatMobile(d.year)}</text>
+        <g class="tick" transform="translate({xScale(i)}, {height + padding.top})">
+          <text x={barWidth / 2} y="-10">
+            {innerWidth > 380 ? d.year : formatMobile(d.year)}
+          </text>
         </g>
       {/each}
     </g>
@@ -88,6 +89,11 @@
 </div>
 
 <style>
+
+  .barchart {
+    min-width: 0;
+    max-width: 500px;
+  }
   
   .x-axis .tick text {
     text-anchor: middle;

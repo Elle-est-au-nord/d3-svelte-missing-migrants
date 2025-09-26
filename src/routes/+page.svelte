@@ -11,12 +11,12 @@
   setContext('selected', () => selected);
 
   let iomData = data.iom.content;
-  let points = $derived(iomData.map(d => new Object({
+  let chartData = $derived(iomData.map(d => new Object({
     year: d.year,
     victims: d[selected]
   })));
 
-  let totalVictims = $derived(points.reduce(
+  let totalVictims = $derived(chartData.reduce(
     (acc, curr) => acc + curr.victims, 0,
   ));
   let formattedTotal = $derived(format(",")(totalVictims));
@@ -42,8 +42,8 @@
       />
     {/each}
   </div>
-  <div class="flex gap-6 p-6 md:flex-row bg-slate-400/40">
-      <Barchart bind:data={points} />
+  <div class="flex flex-row justify-start gap-6 p-6 bg-slate-400/40">
+      <Barchart bind:data={chartData} />
   </div>
 </div>
 
