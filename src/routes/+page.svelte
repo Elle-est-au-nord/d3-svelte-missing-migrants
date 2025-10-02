@@ -1,8 +1,9 @@
 <script>
   /** @type {import('./$types').PageProps} */
   let { data } = $props();
-  import Barchart from '../components/Barchart.svelte';
   import Title from '../components/Title.svelte';
+  import Barchart from '../components/Barchart.svelte';
+  import Map from '../components/Map.svelte';
   import { format } from 'd3-format';
   import { setContext } from 'svelte';
 
@@ -10,10 +11,15 @@
   let selected = $state("missingOrDeceased");
   setContext('selected', () => selected);
 
-  let iomData = data.iom.content;
-  let chartData = $derived(iomData.map(d => new Object({
+  let [dataForChart, dataForMap] = data.iom.content;
+
+  let chartData = $derived(dataForChart.map(d => new Object({
     year: d.year,
     victims: d[selected]
+  })));
+  let mapData = $derived(dataForMap.map(d => new Object({
+    victims: d[selected],
+    ...d
   })));
 
   let totalVictims = $derived(chartData.reduce(
@@ -42,8 +48,9 @@
       />
     {/each}
   </div>
-  <div class="flex flex-row justify-start gap-6 p-6 bg-slate-400/40">
+  <div class="flex flex-wrap justify-around gap-4 p-6 bg-slate-400/40">
       <Barchart bind:data={chartData} />
+      <Map bind:data={mapData} />
   </div>
 </div>
 
@@ -54,10 +61,10 @@
   }
 
   .selector {
-        width: 100%;
-        height: 80px;
-        font-size: 20px;
-    }
+    width: 100%;
+    height: 80px;
+    font-size: 20px;
+   }
 
     input.missingOrDeceased {
       background-color: var(--color-red-800);

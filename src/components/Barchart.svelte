@@ -91,7 +91,7 @@
 <style>
 
   .barchart {
-    min-width: 0;
+    min-width: 300px;
     max-width: 500px;
   }
   
