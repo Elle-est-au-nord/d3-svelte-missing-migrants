@@ -48,7 +48,7 @@
   // We will do this in the html markup
 </script>
 
-<div class="barchart flex-1" bind:clientWidth={width}>
+<div class="barchart flex-1 w-1/3" bind:clientWidth={width}>
   <svg {width} {height}>
     
     <!-- Design y axis -->
