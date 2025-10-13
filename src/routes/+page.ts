@@ -34,11 +34,13 @@ export const load:Load = async ({fetch, params}) => {
         //console.log(dataForBarchart);
         const dataForMap = transformForMap(iomData);
         //console.log(dataForMap);
+        const dataForScatterplot = transformForScatterplot(iomData);
+        //console.log(dataForScatterplot);
 
         return {
 	    iom: {
 	        metadata: iomMetadata,
-	        content: [dataForBarchart, dataForMap],
+	        content: [dataForBarchart, dataForMap, dataForScatterplot]
 	    }
         };
     } catch (err) { console.log(err); }
@@ -74,12 +76,7 @@ function transformForBarchart(data) {
     return byYearArr;
 }
 
-// Data needed
-// "Incident Date", "Incident Year", "Country of Incident",
-// "Coordinates", "Incident Type", "Migration Route"
-// "Number of Dead", "Total Number of Dead and Missing
 function transformForMap(data) {
-    //console.log(data[0]);
     const mapData = data.map(
         (d) => ({
             date: d.incidentDate,
@@ -92,4 +89,36 @@ function transformForMap(data) {
             deceased: d.deceased
         }));
     return mapData;
+}
+
+var result = [];
+
+function prepData(value, key, map){
+    result.push(new Object({
+        year: value[0].incidentYear,
+        region: key,
+        missingOrDeceased: value.reduce((acc, curr) => acc + parseInt(curr.missingOrDeceased), 0,),
+        deceased: value.reduce((acc, curr) => acc + parseInt(curr.deceased), 0,)
+    }));
+}
+
+function transformForScatterplot(data) {
+    const years = Array.from(new Set(data.map(d => d.incidentYear)));
+    const dataByYear = group(data, d => d.incidentYear);
+    // console.log(dataByYear);
+    const dataByRegion = years.map(yr => group(dataByYear.get(yr),
+                              d => d.regionOfIncident));
+    // console.log(dataByRegion[0].get('North America'));
+    //var plotData = [];
+    dataByRegion.map(data => data.forEach(prepData));
+    // dataByRegion.map(data, index) => data.forEach(plotData.push(new Object({
+        // year: years[index],
+        // region: d[0].regionOfIncident //,
+        // missingOrDeceased: d.reduce((acc, curr) => 
+        //                             acc + parseInt(curr.missingOrDeceased), 0,),
+        // deceased: d.reduce((acc, curr) => 
+        //                    acc + parseInt(curr.deceased), 0,)})));
+        //                                                 }))));
+    // return plotData;
+    return result;
 }

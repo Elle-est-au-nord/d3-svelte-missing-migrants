@@ -7,7 +7,6 @@
   import countries from './countries-50m.json';
 
   let { data = $bindable() } = $props();
-  //console.log(data);
   const selected = getContext('selected');
 
   let width = $state();
@@ -83,9 +82,9 @@
         </text>
       {/each}
 
-      <text class="dataSource" x={width/2 - width/10}
+      <text class="mapLegend" x={width/2 - width/10}
             y={height - margin.top - width/25}>
-        Data: <a target="_blank" href="https://missingmigrants.iom.int/">IOM</a> - Map projection: <a target="_blank" href="https://en.wikipedia.org/wiki/Equal_Earth_projection">Equal Earth</a>
+        Map projection: <a target="_blank" href="https://en.wikipedia.org/wiki/Equal_Earth_projection">Equal Earth</a>
       </text>
     </g>
   </svg>
@@ -112,7 +111,7 @@
     opacity: .2;
   }
 
-  .dataSource {
+  .mapLegend {
     fill: var(--color-stone-600);
     text-anchor: "end";
     font-size: 8px;

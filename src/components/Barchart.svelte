@@ -16,7 +16,7 @@
   const f = format(",d");
 
   let width = $state();
-  let height = 350;
+  let height = 450;
 
   let innerWidth = $derived(width - padding.left - padding.right);
   // let innerHeight = $derived(height - padding.top - padding.bottom);

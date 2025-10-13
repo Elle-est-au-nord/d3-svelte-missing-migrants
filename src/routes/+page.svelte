@@ -4,6 +4,7 @@
   import Title from '../components/Title.svelte';
   import Barchart from '../components/Barchart.svelte';
   import Map from '../components/Map.svelte';
+  import Scatterplot from '../components/Scatterplot.svelte';
   import { format } from 'd3-format';
   import { setContext } from 'svelte';
 
@@ -11,13 +12,17 @@
   let selected = $state("missingOrDeceased");
   setContext('selected', () => selected);
 
-  let [dataForChart, dataForMap] = data.iom.content;
+  let [dataForChart, dataForMap, dataForScatterplot] = data.iom.content;
 
   let chartData = $derived(dataForChart.map(d => new Object({
     year: d.year,
     victims: d[selected]
   })));
   let mapData = $derived(dataForMap.map(d => new Object({
+    victims: d[selected],
+    ...d
+  })));
+  let plotData = $derived(dataForScatterplot.map(d => new Object({
     victims: d[selected],
     ...d
   })));
@@ -51,6 +56,7 @@
   <div class="flex flex-wrap justify-around gap-4 p-6 bg-slate-400/40">
       <Barchart bind:data={chartData} />
       <Map bind:data={mapData} />
+      <Scatterplot bind:data={plotData} />
   </div>
 </div>
 
