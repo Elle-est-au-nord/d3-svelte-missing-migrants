@@ -39,7 +39,7 @@
   }
 </script>
 
-<div class="scatterplot w-1/3" bind:clientWidth={width}>
+<div class="scatterplot flex-1" bind:clientWidth={width}>
   <svg {width} {height}>
     <!-- Y axis -->
     <g class="axis y-axis">
@@ -54,7 +54,7 @@
     <!-- X axis -->
     <g class="axis x-axis">
       {#each years as year}
-        <g class="tick" transform="translate({xScale(year)}, {height + margin.top})">
+        <g class="tick" transform="translate({xScale(year)}, {height + 2})">
           <text x={catWidth / 2} y="-10">
             {innerWidth > 380 ? year : formatMobile(year)}
           </text>
@@ -108,6 +108,11 @@
 </div>
 
 <style>
+  .scatterplot {
+    min-width: 350px;
+    max-width: 650px;
+  }
+
   .plotLegend {
     fill: var(--color-stone-200);
     fill-opacity: 0.5;
@@ -117,11 +122,6 @@
     text-anchor: "start";
     font-size: 11px;
     fill: var(--color-stone-600);
-  }
-
-  .scatterplot {
-    min-width: 450px;
-    max-width: 650px;
   }
 
   .dot.missingOrDeceased.medRegion {

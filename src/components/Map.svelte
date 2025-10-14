@@ -93,7 +93,7 @@
 
 <style>
   .map {
-    min-width: 450px;
+    min-width: 350px;
     max-width: 1250px;
   }
 
