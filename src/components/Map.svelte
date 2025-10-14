@@ -11,15 +11,15 @@
 
   let width = $state();
   let height = $derived(width/1.7);
-  let margin = { top: 10, left: 10, right: 10, bottom: 40 };
+  let margin = { top: 10, left: 10, right: 10, bottom: 50 };
 
   const land = feature(countries, countries.objects.land);
   const countrymesh = mesh(countries, countries.objects.countries, (a, b) => a !== b);
   let projection = $derived(geoEqualEarth()
                             .fitSize([width, height], feature(countries, countries.objects.land))
                             .center([0,20]) // GPS of location to zoom on
-                            //.scale(130));     // This is like the zoom
-                            .translate([ width/2 - width/15, height/2 - width/10]));
+                            //.scale(130);     // This is like the zoom
+                            .translate([width/2 - margin.right, height/2 - margin.bottom]));
   let path = $derived(geoPath(projection));
   const valueExtent = extent(data, d => +d.victims)
   const size = scaleSqrt()
@@ -31,7 +31,7 @@
   const xLabel = 100;
 </script>
 
-<div class="map flex-1 w-2/3" bind:clientWidth={width}>
+<div class="map w-2/3" bind:clientWidth={width}>
   {#if width}
   <svg width={width}
        height={height}>
@@ -93,8 +93,8 @@
 
 <style>
   .map {
-    min-width: 350px;
-    max-width: 950px;
+    min-width: 450px;
+    max-width: 1250px;
   }
 
   circle.legendVal.missingOrDeceased {

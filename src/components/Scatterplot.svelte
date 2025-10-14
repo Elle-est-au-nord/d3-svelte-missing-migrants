@@ -7,7 +7,7 @@
   let { data = $bindable() } = $props();
   const selected = getContext('selected');
   const yTicks = [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000];
-  const margin = { top: 10, right: 15, bottom: 10, left: 35 };
+  const margin = { top: 20, right: 15, bottom: 10, left: 35 };
   const f = format(",d");
 
   let width = $state();
@@ -39,7 +39,7 @@
   }
 </script>
 
-<div class="scatterplot flex-1 w-1/3" bind:clientWidth={width}>
+<div class="scatterplot w-1/3" bind:clientWidth={width}>
   <svg {width} {height}>
     <!-- Y axis -->
     <g class="axis y-axis">
@@ -73,7 +73,7 @@
           stroke-opacity="0.7"
           r="4">
           <title>{d.year}
-          {f(d.victims)} victims in {d.region}</title>
+{f(d.victims)} victims in {d.region}</title>
         </circle>
       {/each}
     </g>
@@ -81,7 +81,7 @@
       <rect class="plotLegend"
             x={width/1.6 - 25}
             y="35"
-            width={width/3 + 30}
+            width={width/3 + 35}
             height={height/10 + 5}></rect>
       <circle class="dot {selected()} medRegion"
               cx={width/1.6 - 10}
@@ -120,8 +120,8 @@
   }
 
   .scatterplot {
-    min-width: 300px;
-    max-width: 500px;
+    min-width: 450px;
+    max-width: 650px;
   }
 
   .dot.missingOrDeceased.medRegion {
