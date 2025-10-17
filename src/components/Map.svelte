@@ -27,8 +27,8 @@
   .range([1, 30])  // Size in pixel
 
   const legendValues = [10, 100, 500, 1000];
-  const xCircle = 50;
-  const xLabel = 100;
+  const xCircle = $derived(width/16);
+  const xLabel = $derived(width/12);
 </script>
 
 <div class="map w-2/3" bind:clientWidth={width}>
@@ -55,7 +55,6 @@
           <title>
             {d.date}
 {d.country}
-{d.incident}
 {d.victims} {d.victims > 1 ? " victims" : " victim"}
           </title>
         </circle>
@@ -63,19 +62,21 @@
 
       {#each legendValues as val}
         <circle class="legendVal {selected()}"
-                cx={xCircle}
+                cx={width/7 - xCircle}
                 cy={height/1.2 - size(val)}
                 r={size(val)}>
         </circle>
       {/each}
 
       {#each legendValues as val}
-        <line   x1={xCircle + size(val)} y1={height/1.2 - size(val)*1.5}
-                x2={xLabel} y2={height/1.2 - size(val)*1.5}
+        <line   x1={width/7 - xCircle + size(val)}
+                y1={height/1.2 - size(val)*1.5}
+                x2={width/7 - xCircle + xLabel}
+                y2={height/1.2 - size(val)*1.5}
                 stroke="black"
                 stroke-dasharray="2.2">
         </line>
-        <text x={xLabel + 5}
+        <text x={width/7- xCircle + xLabel + 5}
               y={height/1.2 - size(val)*1.5 + 1}
               font-size="9px" alignment-baseline="middle">
           {val} victims
@@ -83,7 +84,7 @@
       {/each}
 
       <text class="mapLegend" x={width/2 - width/10}
-            y={height - margin.top - width/25}>
+            y={height - 5 - width/25}>
         Map projection: <a target="_blank" href="https://en.wikipedia.org/wiki/Equal_Earth_projection">Equal Earth</a>
       </text>
     </g>
@@ -97,34 +98,34 @@
     max-width: 1250px;
   }
 
-  circle.legendVal.missingOrDeceased {
+  .map circle.legendVal.missingOrDeceased {
     fill: var(--color-red-900);
     stroke: var(--color-red-400);
     stroke-width: 1;
     opacity: .2;
   }
 
-  circle.legendVal.deceased {
+  .map circle.legendVal.deceased {
     fill: var(--color-stone-800);
     stroke: var(--color-stone-500);
     stroke-width: 1;
     opacity: .2;
   }
 
-  .mapLegend {
+  .map .mapLegend {
     fill: var(--color-stone-600);
     text-anchor: "end";
     font-size: 8px;
   }
 
-  circle.missingOrDeceased {
+  .map circle.missingOrDeceased {
     fill: var(--color-red-900);
     stroke: var(--color-red-400);
     stroke-width: 1;
     opacity: .2;
   }
 
-  circle.deceased {
+  .map circle.deceased {
     fill: var(--color-stone-800);
     stroke: var(--color-stone-500);
     stroke-width: 1;

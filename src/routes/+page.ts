@@ -29,14 +29,12 @@ export const load:Load = async ({fetch, params}) => {
                   .sort((a, b) => new Date(a.incidentDate) - new Date(b.incidentDate))
                  );
         //console.log(iomData.length);//18761
-
         const dataForBarchart = transformForBarchart(iomData);
         //console.log(dataForBarchart);
         const dataForMap = transformForMap(iomData);
         //console.log(dataForMap);
         const dataForScatterplot = transformForScatterplot(iomData);
         //console.log(dataForScatterplot);
-
         return {
 	    iom: {
 	        metadata: iomMetadata,
@@ -82,11 +80,13 @@ function transformForMap(data) {
             date: d.incidentDate,
             year: d.incidentYear,
             country: d.countryOfIncident,
+            region: d.regionOfIncident,
             coordinates: d.coordinates,
             incident: d.incidentType,
             route: d.migrationRoute,
             missingOrDeceased: d.missingOrDeceased,
-            deceased: d.deceased
+            deceased: d.deceased,
+            survivors: d.numberOfSurvivors
         }));
     return mapData;
 }
@@ -105,20 +105,8 @@ function prepData(value, key, map){
 function transformForScatterplot(data) {
     const years = Array.from(new Set(data.map(d => d.incidentYear)));
     const dataByYear = group(data, d => d.incidentYear);
-    // console.log(dataByYear);
     const dataByRegion = years.map(yr => group(dataByYear.get(yr),
                               d => d.regionOfIncident));
-    // console.log(dataByRegion[0].get('North America'));
-    //var plotData = [];
     dataByRegion.map(data => data.forEach(prepData));
-    // dataByRegion.map(data, index) => data.forEach(plotData.push(new Object({
-        // year: years[index],
-        // region: d[0].regionOfIncident //,
-        // missingOrDeceased: d.reduce((acc, curr) => 
-        //                             acc + parseInt(curr.missingOrDeceased), 0,),
-        // deceased: d.reduce((acc, curr) => 
-        //                    acc + parseInt(curr.deceased), 0,)})));
-        //                                                 }))));
-    // return plotData;
     return result;
 }

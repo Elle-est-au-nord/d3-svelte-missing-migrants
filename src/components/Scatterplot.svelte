@@ -81,7 +81,7 @@
       <rect class="plotLegend"
             x={width/1.6 - 25}
             y="35"
-            width={width/3 + 35}
+            width={width/3.5 * 1.5 + 10}
             height={height/10 + 5}></rect>
       <circle class="dot {selected()} medRegion"
               cx={width/1.6 - 10}
@@ -99,10 +99,10 @@
               r="4"></circle>
       <text class="legend"
             x={width/1.6} y="55">
-        Crossing the Mediterranean Sea</text>
+        Incidents in the Mediterranean Sea</text>
       <text class="legend"
             x={width/1.6} y="75">
-        On other migration routes</text>
+        Other incidents</text>
     </g>
   </svg>
 </div>
@@ -120,7 +120,7 @@
 
   .legend {
     text-anchor: "start";
-    font-size: 11px;
+    font-size: 10px;
     fill: var(--color-stone-600);
   }
 

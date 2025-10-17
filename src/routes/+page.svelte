@@ -4,6 +4,7 @@
   import Title from '../components/Title.svelte';
   import Barchart from '../components/Barchart.svelte';
   import Map from '../components/Map.svelte';
+  import MapCrop from '../components/MapCrop.svelte';
   import Scatterplot from '../components/Scatterplot.svelte';
   import { format } from 'd3-format';
   import { setContext } from 'svelte';
@@ -22,6 +23,9 @@
     victims: d[selected],
     ...d
   })));
+  let medRegions = ['Europe', 'Mediterranean', 'Northern Africa',
+                    'Western Africa', 'Western Asia' ];
+  let mapMed = $derived(mapData.filter(d => medRegions.includes(d.region)));
   let plotData = $derived(dataForScatterplot.map(d => new Object({
     victims: d[selected],
     ...d
@@ -57,6 +61,7 @@
       <Barchart bind:data={chartData} />
       <Map bind:data={mapData} />
       <Scatterplot bind:data={plotData} />
+      <MapCrop bind:data={mapMed} />
   </div>
 </div>
 
