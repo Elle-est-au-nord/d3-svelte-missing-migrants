@@ -1,5 +1,4 @@
 /** @type {import('./$types').PageLoad} */
-import Papa from 'papaparse';
 import { group, extent } from 'd3-array';
 import { csv } from 'd3-fetch';
 

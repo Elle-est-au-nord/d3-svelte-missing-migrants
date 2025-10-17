@@ -1,5 +1,6 @@
 <script>
-  import { geoPath, geoEqualEarth } from 'd3-geo';
+  import { geoPath } from 'd3-geo';
+  import { geoModifiedStereographicMiller } from 'd3-geo-projection';
   import { feature, mesh } from 'topojson-client';
   import { extent } from 'd3-array';
   import { scaleSqrt } from 'd3-scale';
@@ -15,7 +16,7 @@
 
   const land = feature(countries, countries.objects.land);
   const countrymesh = mesh(countries, countries.objects.countries, (a, b) => a !== b);
-  let projection = $derived(geoEqualEarth()
+  let projection = $derived(geoModifiedStereographicMiller()
                             .fitSize([width, height], feature(countries, countries.objects.land))
                             .center([5.42,39.14]) // GPS of location to zoom on
                             .scale(width - 100)     // This is like the zoom
@@ -32,8 +33,8 @@
                   "Western Africa / Atlantic route to the Canary Islands": '#e67700'};
 
   const legendValues = [10, 100, 500, 1000];
-  const xCircle = $derived(width/16);;
-  const xLabel = $derived(width/12);;
+  const xCircle = $derived(width/16);
+  const xLabel = $derived(width/12);
 </script>
 
 <div class="mapcropped w-2/3" bind:clientWidth={width}>
@@ -98,7 +99,7 @@
  
       <text class="mapLegendCrop" x={width/2 - width/10}
             y={height - 2}>
-        Map projection: <a target="_blank" href="https://en.wikipedia.org/wiki/Equal_Earth_projection">Equal Earth</a>
+        Map projection: <a target="_blank" href="https://www.tandfonline.com/doi/abs/10.1559/152304086783899908">Miller Oblated Stereographic</a>
       </text>
     </g>
     <g>
