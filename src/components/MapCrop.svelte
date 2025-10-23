@@ -37,7 +37,7 @@
   const xLabel = $derived(width/12);
 </script>
 
-<div class="mapcropped w-2/3" bind:clientWidth={width}>
+<div class="mapcropped flex-1" bind:clientWidth={width}>
   {#if width}
   <svg width={width}
        height={height}>
@@ -125,7 +125,7 @@
 <style>
   .mapcropped {
     min-width: 350px;
-    max-width: 900px;
+    max-width: 100%;
   }
 
   .mapcropped .legend {

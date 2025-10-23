@@ -3,15 +3,15 @@
   import { feature, mesh } from 'topojson-client';
   import { extent } from 'd3-array';
   import { scaleSqrt } from 'd3-scale';
-  import { getContext } from 'svelte';
+  // import { getContext } from 'svelte';
   import countries from './countries-50m.json';
 
-  let { data = $bindable() } = $props();
-  const selected = getContext('selected');
+  let { data = $bindable(), selected } = $props();
+  // const selected = getContext('selected');
 
   let width = $state();
   let height = $derived(width/1.7);
-  let margin = { top: 10, left: 10, right: 10, bottom: 50 };
+  let margin = { top: 15, left: 10, right: 10, bottom: 50 };
 
   const land = feature(countries, countries.objects.land);
   const countrymesh = mesh(countries, countries.objects.countries, (a, b) => a !== b);
@@ -19,7 +19,7 @@
                             .fitSize([width, height], feature(countries, countries.objects.land))
                             .center([0,20]) // GPS of location to zoom on
                             //.scale(130);     // This is like the zoom
-                            .translate([width/2 - margin.right, height/2 - margin.bottom]));
+                            .translate([width/2 - margin.right, height/2.8 - margin.top]));
   let path = $derived(geoPath(projection));
   const valueExtent = extent(data, d => +d.victims)
   const size = scaleSqrt()
@@ -31,7 +31,7 @@
   const xLabel = $derived(width/12);
 </script>
 
-<div class="map w-2/3" bind:clientWidth={width}>
+<div class="map flex-1" bind:clientWidth={width}>
   {#if width}
   <svg width={width}
        height={height}>
@@ -48,7 +48,7 @@
         stroke="white" />
       {/if}
       {#each data as d}
-        <circle class="{selected()}"
+        <circle class={selected}
                 cx={projection([+d.coordinates[1], +d.coordinates[0]])[0]}
                 cy={projection([+d.coordinates[1], +d.coordinates[0]])[1]}
                 r={size(+d.victims)}>
@@ -61,7 +61,7 @@
       {/each}
 
       {#each legendValues as val}
-        <circle class="legendVal {selected()}"
+        <circle class="legendVal {selected}"
                 cx={width/7 - xCircle}
                 cy={height/1.2 - size(val)}
                 r={size(val)}>
@@ -95,7 +95,7 @@
 <style>
   .map {
     min-width: 350px;
-    max-width: 1250px;
+    max-width: 100%;
   }
 
   .map circle.legendVal.missingOrDeceased {
