@@ -1,12 +1,12 @@
 <script>
   import { scaleLinear } from 'd3-scale';
   import { format } from 'd3-format';
-  import { getContext } from 'svelte';
+  // import { getContext } from 'svelte';
 
   // 1. Basic Setup: Get the data
 
-  let { data = $bindable() } = $props();
-  const selected = getContext('selected');
+  let { data = $bindable(), selected } = $props();
+  // const selected = getContext('selected');
   
   // 2. Dimensions, Margins & Scales
 
@@ -74,7 +74,7 @@
     </g>
 
     <!-- 4. Design the bars -->
-    <g class="bars {selected()}">
+    <g class="bars {selected}">
       {#each data as d, i}
         <rect
           x={xScale(i) + 2}

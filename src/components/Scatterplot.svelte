@@ -39,7 +39,7 @@
   }
 </script>
 
-<div class="scatterplot flex-1" bind:clientWidth={width}>
+<div class="scatterplot pb-4 flex-1" bind:clientWidth={width}>
   <svg {width} {height}>
     <!-- Y axis -->
     <g class="axis y-axis">
