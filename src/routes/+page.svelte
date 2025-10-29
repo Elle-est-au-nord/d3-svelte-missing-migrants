@@ -72,6 +72,11 @@
 
   const options = ["missingOrDeceased", "deceased"];
 
+  // TO IMPLEMENT (in a different namespace?)
+  // get the two highest peaks
+  // retrieve the year and number of victims
+  // For now, it's hardcoded
+
 </script>
 
 <div class="@container">
@@ -89,16 +94,33 @@
       </Container>
     </div>
     <div slot="foreground">
-      <ScrollerSection class="w-1/3"> 
-        <h2 class="text-2xl text-center font-bold text-slate-800/90 bg-white/50">
-          According to the records of the International Organization for Migration (IOM),
-          <span class={options[0]}>{formattedTotal1}</span> 
-          people fell victim to a critical incident on their migration routes since 2014.
-        </h2>
+      <ScrollerSection>
+        <div class="flex justify-center">
+          <h2 class="w-40 text-4xl text-center font-bold text-slate-800/90 bg-white/80 rounded-full py-6">
+            Scroll <br />
+            ↓
+          </h2>
+        </div>
+      </ScrollerSection>
+      <ScrollerSection> 
+        <div class="flex justify-evenly items-center">
+          <h2 class="w-1/4 text-2xl text-justify font-bold text-slate-800/90 bg-white/60">
+            According to the records of the <span class="highlight">International Organization for Migration</span> (IOM),
+            <span class={options[0]}>{formattedTotal1}</span> 
+            people fell victim to a critical incident on their migration routes since 2014.
+          </h2>
+          <Barchart bind:data={chartData1}
+                  selected={options[0]} />
+        </div>
       </ScrollerSection>
       <ScrollerSection>
-        <Barchart bind:data={chartData1}
-                  selected={options[0]} />
+        <div class="flex justify-evenly items-center">
+          <h2 class="w-1/4 text-2xl text-justify font-bold text-slate-800/90 bg-white/60">
+            The IOM dataset recorded that the number of victims peaked in <b>2016</b> (<span class={options[0]}>8,099</span> victims) and <b>2023</b> (<span class={options[0]}>8,746</span> victims). 
+          </h2>
+          <Barchart bind:data={chartData1}
+                    selected={options[0]} />
+        </div>
       </ScrollerSection>
     </div>
   </Scroller>
@@ -177,6 +199,10 @@
   @reference "tailwindcss";
   :global(html) {
     background-color: theme(--color-gray-100);
+  }
+
+  span.highlight{
+    color: var(--color-zinc-800);
   }
 
   span.missingOrDeceased {
