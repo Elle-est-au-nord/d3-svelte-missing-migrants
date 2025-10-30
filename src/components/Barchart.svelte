@@ -5,7 +5,9 @@
 
   // 1. Basic Setup: Get the data
 
-  let { data = $bindable(), selected } = $props();
+  let { data = $bindable(), selected, peaks } = $props();
+  const [peak1='peak1', peak2='peak2'] = peaks;
+
   // const selected = getContext('selected');
   
   // 2. Dimensions, Margins & Scales
@@ -48,7 +50,7 @@
   // We will do this in the html markup
 </script>
 
-<div class="barchart flex-1" bind:clientWidth={width}>
+<div class="barchart flex-1 bg-white/60" bind:clientWidth={width}>
   <svg {width} {height}>
     
     <!-- Design y axis -->
@@ -77,6 +79,7 @@
     <g class="bars {selected}">
       {#each data as d, i}
         <rect
+          class={d.year == peak1 || d.year == peak2 ? "highlight-bar" : "all"}
           x={xScale(i) + 2}
           y={yScale(d.victims)}
           width={barWidth * 0.9}
@@ -100,16 +103,22 @@
     color: --color-slate-800;
   }
 
-  .bars.missingOrDeceased rect {
+  .bars.missingOrDeceased rect.all {
     fill: var(--color-red-900);
-    stroke: none;
     opacity: .8;
   }
+  .bars.missingOrDeceased rect.highlight-bar {
+    fill: var(--color-red-950);
+    opacity: 1;
+  }
 
-  .bars.deceased rect {
+  .bars.deceased rect.all {
     fill: var(--color-stone-800);
-    stroke: none;
     opacity: .8;
+  }
+  .bars.deceased rect.highlight-bar {
+    fill: var(--color-stone-900);
+    opacity: 1;
   }
 
 

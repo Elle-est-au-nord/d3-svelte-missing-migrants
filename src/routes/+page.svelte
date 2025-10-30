@@ -2,6 +2,7 @@
   /** @type {import('./$types').PageProps} */
   let { data } = $props();
   import Title from '../components/Title.svelte';
+  import Text from '../components/Text.svelte';
   import Barchart from '../components/Barchart.svelte';
   import Map from '../components/Map.svelte';
   import MapCrop from '../components/MapCrop.svelte';
@@ -96,7 +97,7 @@
     <div slot="foreground">
       <ScrollerSection>
         <div class="flex justify-center">
-          <h2 class="w-40 text-4xl text-center font-bold text-slate-800/90 bg-white/80 rounded-full py-6">
+          <h2 class="blink-text w-40 text-4xl text-center font-bold text-slate-800/90 bg-white/80 rounded-full py-6">
             Scroll <br />
             ↓
           </h2>
@@ -104,22 +105,22 @@
       </ScrollerSection>
       <ScrollerSection> 
         <div class="flex justify-evenly items-center">
+          <Barchart bind:data={chartData1} peaks=""
+                  selected={options[0]} />
           <h2 class="w-1/4 text-2xl text-justify font-bold text-slate-800/90 bg-white/60">
             According to the records of the <span class="highlight">International Organization for Migration</span> (IOM),
             <span class={options[0]}>{formattedTotal1}</span> 
             people fell victim to a critical incident on their migration routes since 2014.
           </h2>
-          <Barchart bind:data={chartData1}
-                  selected={options[0]} />
         </div>
       </ScrollerSection>
       <ScrollerSection>
         <div class="flex justify-evenly items-center">
-          <h2 class="w-1/4 text-2xl text-justify font-bold text-slate-800/90 bg-white/60">
-            The IOM dataset recorded that the number of victims peaked in <b>2016</b> (<span class={options[0]}>8,099</span> victims) and <b>2023</b> (<span class={options[0]}>8,746</span> victims). 
-          </h2>
-          <Barchart bind:data={chartData1}
+          <Barchart bind:data={chartData1} peaks={["2016", "2023"]}
                     selected={options[0]} />
+          <h2 class="w-1/4 text-2xl text-justify font-bold text-slate-800/90 bg-white/60">
+            The IOM dataset recorded that the number of victims peaked in <span class="hl-victims">2016 (8,099 victims)</span> and <span class="hl-victims">2023 (8,746 victims)</span>. 
+          </h2>
         </div>
       </ScrollerSection>
     </div>
@@ -137,16 +138,25 @@
       </Container>
     </div>
     <div slot="foreground">
-      <ScrollerSection class="w-1/3"> 
-        <h2 class="text-2xl text-center font-bold text-slate-800/90 bg-white/50">
-          The same IOM dataset reveals that
-          <span class={options[1]}>{formattedTotal2}</span> 
-          people died on their migration routes since 2014.
-        </h2>
+      <ScrollerSection> 
+        <div class="flex justify-evenly items-center">
+          <Barchart bind:data={chartData2} peaks=""
+                    selected={options[1]} />
+          <h2 class="w-1/4 text-2xl text-center font-bold text-slate-800/90 bg-white/50">
+            The same IOM dataset reveals that
+            <span class={options[1]}>{formattedTotal2}</span> 
+            people died on their migration routes since 2014.
+          </h2>
+        </div>
       </ScrollerSection>
       <ScrollerSection>
-        <Barchart bind:data={chartData2}
-                  selected={options[1]} />
+        <div class="flex justify-evenly items-center">
+          <Barchart bind:data={chartData2} peaks={["2023"]}
+                    selected={options[1]} />
+          <h2 class="w-1/4 text-2xl text-justify font-bold text-slate-800/90 bg-white/60">
+            The number of deceased victims recorded shows a peak recently, in <span class="hl-victims2">2023 (5,465 victims)</span>. 
+          </h2>
+        </div>
       </ScrollerSection>
     </div>
   </Scroller>
@@ -168,30 +178,14 @@
         <Scatterplot bind:data={plotData} />
       </div>
     </Container>
+    <Text number={formattedTotalMed1} percentage={formattedMedPercent} />
   </div>
 
-  <Scroller
-    id="scroller"
-    on:change={(e) => console.debug("change", e)}
-    on:enter={(e) => console.debug("enter", e)}
-    on:exit={(e) => console.debug("exit", e)}
-    >
-    <div slot="background">
+  <div class="flex flex-col">
       <Container width="full" height="" background="var(--color-gray-100)">
         <MapCrop bind:data={mapMed1} />
       </Container>
-    </div>
-    <div slot="foreground">
-      <ScrollerSection></ScrollerSection>
-      <ScrollerSection class="w-1/3"> 
-        <h2 class="text-2xl text-center font-bold text-slate-800/90 bg-white/50">
-          <span class={options[0]}>{formattedTotalMed1} people  </span> or
-          <span class={options[0]}>{formattedMedPercent}% 
-          </span> of all people who died or went missing since 2014 did so in the Mediterranean Sea.
-        </h2>
-      </ScrollerSection>
-    </div>
-  </Scroller>
+  </div>
 
 </div>
 
@@ -201,8 +195,30 @@
     background-color: theme(--color-gray-100);
   }
 
+  .blink-text {
+    animation: blinker 5s linear infinite;
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
   span.highlight{
     color: var(--color-zinc-800);
+  }
+
+  span.hl-victims {
+    background-color: var(--color-red-950);
+    opacity: 1;
+    color: white;
+  }
+
+  span.hl-victims2 {
+    background-color: var(--color-stone-900);
+    opacity: 1;
+    color: white;
   }
 
   span.missingOrDeceased {
