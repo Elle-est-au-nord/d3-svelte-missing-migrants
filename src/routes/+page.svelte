@@ -9,6 +9,7 @@
   import Scatterplot from '../components/Scatterplot.svelte';
   import { format } from 'd3-format';
   import { setContext } from 'svelte';
+  import BgMapR from '$lib/assets/map-red-img.png';
   import { 
     Container,
     Section,
@@ -53,17 +54,17 @@
 
   const f = format(","); const f2 = format(".1f");
 
-  let totalVictims1 = chartData1.reduce(
+  let totalVictims1 = $derived(chartData1.reduce(
     (acc, curr) => acc + curr.victims, 0,
-  );
+  ));
   let formattedTotal1 = $derived(f(totalVictims1));
-  let totalVictims2 = chartData2.reduce(
+  let totalVictims2 = $derived(chartData2.reduce(
     (acc, curr) => acc + curr.victims, 0,
-  );
+  ));
   let formattedTotal2 = $derived(f(totalVictims2));
-  let totalVictimsMed1 = mapMed1.reduce(
+  let totalVictimsMed1 = $derived(mapMed1.reduce(
     (acc, curr) => acc + curr.victims, 0,
-  );
+  ));
   let formattedTotalMed1 = $derived(f(totalVictimsMed1));
   let formattedMedPercent = $derived(
     f2(totalVictimsMed1*100/totalVictims1)
@@ -95,14 +96,7 @@
       </Container>
     </div>
     <div slot="foreground">
-      <ScrollerSection>
-        <div class="flex justify-center">
-          <h2 class="blink-text w-40 text-4xl text-center font-bold text-slate-800/90 bg-white/80 rounded-full py-6">
-            Scroll <br />
-            ↓
-          </h2>
-        </div>
-      </ScrollerSection>
+      <ScrollerSection></ScrollerSection>
       <ScrollerSection> 
         <div class="flex justify-evenly items-center">
           <Barchart bind:data={chartData1} peaks=""
@@ -160,10 +154,9 @@
       </ScrollerSection>
     </div>
   </Scroller>
-
-  <div class="flex flex-col">
-    <Container width="full" height="" background="var(--color-gray-100)">
-      <div class="selector bg-slate-400/40 flex p-6">
+      
+  <div class="bg-splot w-full flex justify-center items-end py-4 bg-slate-400/40">
+    <div class="selector flex justify-center w-1/4">
         {#each options as option}
           <input style="margin-right:7px;"
                  type="button" id="{option}"
@@ -174,18 +167,11 @@
                         : 'People missing or deceased'}"/>
         {/each}
       </div>
-      <div class="flex flex-wrap justify-around gap-4 p-6 bg-slate-400/40">
-        <Scatterplot bind:data={plotData} />
-      </div>
-    </Container>
+      <Scatterplot bind:data={plotData} />
+    </div>
     <Text number={formattedTotalMed1} percentage={formattedMedPercent} />
-  </div>
-
-  <div class="flex flex-col">
-      <Container width="full" height="" background="var(--color-gray-100)">
-        <MapCrop bind:data={mapMed1} />
-      </Container>
-  </div>
+  
+    <MapCrop bind:data={mapMed1} />
 
 </div>
 
@@ -232,10 +218,13 @@
     color: white;
  }
 
-  .selector {
-    width: 100%;
-    height: 80px;
-    font-size: 20px;
+  .bg-splot {
+    height : 610px;
+  }
+
+  .selector input {
+    height: 50px;
+    font-size: 16px;
    }
 
     input.missingOrDeceased {
